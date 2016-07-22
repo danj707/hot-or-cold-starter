@@ -70,8 +70,6 @@ function compareGuess(userGuess, secretNumber) {
     }
 }
 
-////////// doc ready stuff
-
 $(document).ready(function () {
 
     //modal box stuff
