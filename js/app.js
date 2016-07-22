@@ -38,11 +38,11 @@ function validateInput(userGuess) {
 }
 
 function compareGuess(userGuess, secretNumber) {
-    console.log("user guessed: " + userGuess);
-    console.log("secret number is: " + secretNumber);
+    // console.log("user guessed: " + userGuess);
+    //console.log("secret number is: " + secretNumber);
 
     var testNum = Math.abs(userGuess - secretNumber);
-    console.log("Distance away: " + testNum)
+    //console.log("Distance away: " + testNum)
 
     if (testNum >= 50) {
         $("h2#feedback").html("Ice cold!").css("background", "#67f1e2"); //html
