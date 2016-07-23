@@ -16,12 +16,14 @@ function newGame() {
         //check for validation, return false if failed
         if (validateInput(userGuess)) {
             compareGuess(userGuess, secretNumber);
-            //push last guess to the list
+
+            $("ul#guessList").append("<li>" + userGuess + "</li>"); //append the last guess to the list
+
         } else {
-            alert("Sorry, you didn't enter a valid number.  Try again.")
+            alert("Sorry, you didn't enter a valid number. 1-100, no letters or words. Try again.")
         }
 
-        //increment the counter
+        //increment the counter even if check failed, still a guess
         count++;
         $("span#count").html(count); //html
     });
@@ -34,15 +36,15 @@ function validateInput(userGuess) {
     if (typeof userGuess !== 'number') {
         return false;
     }
+    if (userGuess > 100) {
+        return false;
+    }
     return true;
 }
 
 function compareGuess(userGuess, secretNumber) {
-    // console.log("user guessed: " + userGuess);
-    //console.log("secret number is: " + secretNumber);
 
     var testNum = Math.abs(userGuess - secretNumber);
-    //console.log("Distance away: " + testNum)
 
     if (testNum >= 50) {
         $("h2#feedback").html("Ice cold!").css("background", "#67f1e2"); //html
@@ -86,7 +88,7 @@ $(document).ready(function () {
 
     /*--- Hide information modal box ---*/
     $(".new").click(function () {
-        location.reload();
+        location.reload(); //reload the page on new game click
     });
 
     newGame(); // run the game
