@@ -3,6 +3,7 @@
 ///////////////////////
 
 var count = 0;
+var guessArr = [];
 
 function newGame() {
     //make the secret number, 1-100
@@ -12,13 +13,23 @@ function newGame() {
     $("form").submit(function (event) {
         event.preventDefault(); //dont submit to server
         var userGuess = parseInt($("input#userGuess").val(), 10); //grab val and get the integer
+        guessArr.push(userGuess);
+
 
         //check for validation, return false if failed
         if (validateInput(userGuess)) {
-            compareGuess(userGuess, secretNumber);
+            //display feedback from prior guess
+            if (guessArr.length == 1) {
+                compareGuess(userGuess, secretNumber);
+                //do nothing, first guess doesn't get any feedback, as no prior guess to compare to
+            } else {
+                var lastGuess = guessArr[guessArr.length - 2];
+                //    console.log("Diff between guesses: " + lastGuess);
+                compareGuess(userGuess, secretNumber, lastGuess);
+            }
+
 
             $("ul#guessList").append("<li>" + userGuess + "</li>"); //append the last guess to the list
-
         } else {
             alert("Sorry, you didn't enter a valid number. 1-100, no letters or words. Try again.")
         }
@@ -42,34 +53,52 @@ function validateInput(userGuess) {
     return true;
 }
 
-function compareGuess(userGuess, secretNumber) {
+function compareGuess(userGuess, secretNumber, lastGuess) {
 
     var testNum = Math.abs(userGuess - secretNumber);
+    var lastTest = Math.abs(lastGuess - secretNumber); //which one was closer
+    console.log("current guess distance from secret:" + testNum);
+    console.log("previous guess distance from secret:" + lastTest);
+    var compareText;
+
+    if (isNaN(lastTest) || (lastTest == 'undefined')) {
+        compareText = " Try again."
+    } else if (testNum < lastTest) {
+        compareText = " That guess was better than the last one!";
+    } else if (testNum > lastTest) {
+        compareText = " Your last guess was better, sorry.";
+    } else {
+        //do nothing, guessed the right answer, below will handle it
+    }
 
     if (testNum >= 50) {
-        $("h2#feedback").html("Ice cold!").css("background", "#67f1e2"); //html
+        $("h2#feedback").html("Ice cold. " + compareText).css("background", "#67f1e2"); //html
     }
-    if ((testNum < 50) & (testNum >= 40)) {
-        $("h2#feedback").html("Thawing!").css("background", "#9ab2e8"); //html
+    if ((testNum < 50) && (testNum >= 40)) {
+        $("h2#feedback").html("Thawing. " + compareText).css("background", "#9ab2e8"); //html
     }
-    if ((testNum < 40) & (testNum >= 30)) {
-        $("h2#feedback").html("Lukewarm").css("background", "#d9c3aa"); //html
+    if ((testNum < 40) && (testNum >= 30)) {
+        $("h2#feedback").html("Lukewarm." + compareText).css("background", "#d9c3aa"); //html
     }
-    if ((testNum < 30) & (testNum >= 20)) {
-        $("h2#feedback").html("Getting hotter").css("background", "#ffbb5e"); //html
+    if ((testNum < 30) && (testNum >= 20)) {
+        $("h2#feedback").html("Getting hotter." + compareText).css("background", "#ffbb5e"); //html
     }
-    if ((testNum < 20) & (testNum >= 10)) {
-        $("h2#feedback").html("Hot").css("background", "#ff8a00"); //html
+    if ((testNum < 20) && (testNum >= 10)) {
+        $("h2#feedback").html("Hot." + compareText).css("background", "#ff8a00"); //html
     }
-    if ((testNum < 10) & (testNum >= 5)) {
-        $("h2#feedback").html("Super hot!").css("background", "#ff5200"); //html
+    if ((testNum < 10) && (testNum >= 5)) {
+        $("h2#feedback").html("Super hot!" + compareText).css("background", "#ff5200"); //html
     }
-    if ((testNum < 5) & (testNum >= 1)) {
-        $("h2#feedback").html("OMG almost there!").css("background", "#ef1717"); //html
+    if ((testNum < 5) && (testNum >= 1)) {
+        $("h2#feedback").html("OMG almost there!" + compareText).css("background", "#ef1717"); //html
     }
     if (testNum === 0) {
         $("h2#feedback").html("Guessed it!").css("background", "red");
     }
+
+
+
+
 }
 
 $(document).ready(function () {
